@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-### NOTE: There's currently no support for autocreating the security
-### groups for network load balancers, so we have to instantiate the group
+### NOTE: There's currently no support for autoconfiguring the security
+### groups for network load balancers, so we have to configure the group
 ### ourselves.
 ### NOTE: Don't yet know if the same certificates need to be used internally.
 
@@ -11,7 +11,7 @@ import aws_cdk.aws_ec2 as ec2
 from aws_cdk.aws_ec2 import Port
 from aws_cdk.aws_autoscaling import AutoScalingGroup
 from aws_cdk.core import Stack, App, CfnOutput, Environment, Duration
-from aws_cdk.aws_elasticloadbalancingv2 import \
+from aws_cdk.aws_elasticloadbalancingv2 import ListenerCertificate, \
     NetworkLoadBalancer, Protocol, NetworkTargetGroup, HealthCheck
 from aws_cdk.aws_certificatemanager import Certificate, CertificateValidation
 from aws_cdk.aws_route53 import CnameRecord, AaaaRecord, RecordTarget, HostedZone
@@ -132,7 +132,8 @@ class DemoStack(Stack):
         #
         # TODO: determine if we need to use the same cert for pub-facing
         #       and internal service
-        lb.add_listener("Cecil", port=443, certificates=[cert],
+        listener_cert = ListenerCertificate(cert.certificate_arn)
+        lb.add_listener("Cecil", port=443, certificates=[listener_cert],
             default_target_groups=[webish])
 
         # point the load balancer to the target group for the web service

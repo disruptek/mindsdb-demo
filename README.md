@@ -1,7 +1,9 @@
 # Demo for MindsDB
 
-This currently demonstrates a bug with attaching the certificate to one of the
-network load balancer listeners.
+~~This currently demonstrates a bug with attaching the certificate to one of
+the network load balancer listeners.~~
+
+I was using it wrong. Listeners need a specially-wrapped `ListenerCertificate`.
 
 ## Setup
 
